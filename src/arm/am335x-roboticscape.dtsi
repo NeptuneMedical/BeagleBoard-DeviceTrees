@@ -74,7 +74,7 @@
 
 			/* PRU encoder input */
 			0x03c 0x36	/* P8_15,PRU0_r31_15,MODE6 */
-			0x038 0x36	/* P8_16,PRU0_r31_16,MODE6 */
+			0x190 0x36	/* P9_31,PRU0_r31_0,MODE6 */
 
 			/* PRU Servo output */
 			0x0e0 0x05	/*pru1_pru_r30_8, MODE5*/
