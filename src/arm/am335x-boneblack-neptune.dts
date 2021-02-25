@@ -14,7 +14,7 @@
 
 /* RoboticsCape */
 #include "am335x-bone-common-universal-pins.dtsi"
-#include "am335x-roboticscape.dtsi"
+#include "am335x-neptune.dtsi"
 
 / {
 	model = "TI AM335x BeagleBone Black Neptune Custom Cape";
