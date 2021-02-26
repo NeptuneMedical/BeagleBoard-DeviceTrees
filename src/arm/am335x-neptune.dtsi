@@ -59,7 +59,7 @@
 			/* GPIO Input Pullup */
 			0x09c 0x37	/*P8.9  T6  PAUSE_BTN */
 			0x098 0x37	/*P8.10 U6  MODE_BTN  */
-			0x1AC 0x37	/*P9.25 A14 IMU_INT   */
+			/*0x1AC 0x37*/	/*P9.25 A14 IMU_INT   */
 
 			/* Motor Control GPIO Out*/
 			0x0cc 0x0F	/*P8.34 MDIR_2B different from blue!!*/
@@ -74,7 +74,9 @@
 
 			/* PRU encoder input */
 			0x03c 0x36	/* P8_15,PRU0_r31_15,MODE6 */
-			0x190 0x36	/* P8_31,PRU0_r31_0,MODE6 */
+			0x038 0x36 	/* P8_16.PRU0_r31_14.MODE6 */
+			0x1ac 0x36	/* P9_25,PRU0_r31_7,MODE6 */
+			0x9a4 0x36	/* P9_27.PRU0_r31.5.MODE6 */
 
 			/* PRU Servo output */
 			0x0e0 0x05	/*pru1_pru_r30_8, MODE5*/
@@ -249,11 +251,11 @@
 	};
 
 	/* UART 1 TX */
-	 P9_24_pinmux {
+	P9_24_pinmux {
 		compatible = "bone-pinmux-helper";
 		status = "okay";
 		pinctrl-names = "default", "gpio", "gpio_pu", "gpio_pd", "uart", "can", "i2c",  "pruin";
-		pinctrl-0 = <&P9_24_uart_pin>;
+		pinctrl-0 = <&P9_24_pruin_pin>;
 		pinctrl-1 = <&P9_24_gpio_pin>;
 		pinctrl-2 = <&P9_24_gpio_pu_pin>;
 		pinctrl-3 = <&P9_24_gpio_pd_pin>;
@@ -316,18 +318,18 @@
 /*******************************************************************************
 * EQEP
 *******************************************************************************/
-&eqep0 {
+/*&eqep0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&P9_92_qep_pin &P9_27_qep_pin>;
-
-	count_mode = <0>;  /* 0 - Quadrature mode, normal 90 phase offset cha & chb.  1 - Direction mode.  cha input = clock, chb input = direction */
-	swap_inputs = <0>; /* Are channel A and channel B swapped? (0 - no, 1 - yes) */
-	invert_qa = <1>;   /* Should we invert the channel A input?  */
-	invert_qb = <1>;   /* Should we invert the channel B input? I invert these because my encoder outputs drive transistors that pull down the pins */
-	invert_qi = <0>;   /* Should we invert the index input? */
-	invert_qs = <0>;   /* Should we invert the strobe input? */
-	status = "okay";
-};
+*/
+/*	count_mode = <0>;  /* 0 - Quadrature mode, normal 90 phase offset cha & chb.  1 - Direction mode.  cha input = clock, chb input = direction */
+/*	swap_inputs = <0>; /* Are channel A and channel B swapped? (0 - no, 1 - yes) */
+/*	invert_qa = <1>;   /* Should we invert the channel A input?  */
+/*	invert_qb = <1>;   /* Should we invert the channel B input? I invert these because my encoder outputs drive transistors that pull down the pins */
+/*	invert_qi = <0>;   /* Should we invert the index input? */
+/*	invert_qs = <0>;   /* Should we invert the strobe input? */
+/*	status = "okay";
+};*/
 
 &eqep1 {
 	pinctrl-names = "default";
