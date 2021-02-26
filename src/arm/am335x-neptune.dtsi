@@ -1,38 +1,24 @@
 /*
- * @file am335x-roboticscape.dtsi
+ * @file am335x-neptune.dtsi
  *
  * used by:
- * am335x-boneblack-roboticscape.dts
- * am335x-boneblack-wireless-roboticscape.dts
+ * am335x-boneblack-neptune.dts
  *
  *
- * @file am335x-boneblack-roboticscape.dtb
+ * @file am335x-boneblack-neptune.dtb
  *
  * based on am335x-boneblack.dtb
  *
  * This device tree serves to replace the need for an overlay when using the
- * RoboticsCape. It is similar to the boneblue tree but preserves pin config for
- * the black.
+ * MotorCape with piggybaked encoders. It is a stripped down and slightly
+ * remapped version of am335x-roboticscape.dtsi.
  *
- * This file was updated in April 2018 to support LED driver like in BB Blue
- * This goes in sync with V0.4.0 of the Robotics Cape library
+ * This file was updated in Feb 2021 to support the Neptune custom usage of the
+ * Motor Cape.
  *
- * @author     James Strawson
- * @date       April 19, 2018
  */
 
 &aliases {
-	i2c0 = &i2c0;
-	i2c1 = &i2c1;
-	i2c2 = &i2c2;
-	serial0 = &uart0;
-	serial1 = &uart1;
-	serial2 = &uart2;
-	serial3 = &uart3;
-	serial4 = &uart4;
-	serial5 = &uart5;
-	d-can0 = &dcan0;
-	d-can1 = &dcan1;
 	usb0 = &usb0;
 	usb1 = &usb1;
 	phy0 = &usb0_phy;
@@ -56,11 +42,6 @@
 	mux_helper_pins: pins {
 		pinctrl-single,pins = <
 
-			/* GPIO Input Pullup */
-			0x09c 0x37	/*P8.9  T6  PAUSE_BTN */
-			0x098 0x37	/*P8.10 U6  MODE_BTN  */
-			/*0x1AC 0x37*/	/*P9.25 A14 IMU_INT   */
-
 			/* Motor Control GPIO Out*/
 			0x0cc 0x0F	/*P8.34 MDIR_2B different from blue!!*/
 			0x0a8 0x0F	/*P8.43 MDIR_3B*/
@@ -74,48 +55,10 @@
 
 			/* PRU encoder input */
 			0x03c 0x36	/* P8_15,PRU0_r31_15,MODE6 */
-			0x038 0x36 	/* P8_16.PRU0_r31_14.MODE6 */
 			0x1ac 0x36	/* P9_25,PRU0_r31_7,MODE6 */
-			0x9a4 0x36	/* P9_27.PRU0_r31.5.MODE6 */
-
-			/* PRU Servo output */
-			0x0e0 0x05	/*pru1_pru_r30_8, MODE5*/
-			0x0e8 0x05	/*pru1_pru_r30_10, MODE5 */
-			0x0e4 0x05	/*pr1_pru1_pru_r30_9, MODE5 */
-			0x0ec 0x05	/*pru1_pru_r30_11, MODE5 */
-			0x0b8 0x05	/*pru1_pru_r30_6, MODE5 */
-			0x0bc 0x05	/*pru1_pru_r30_7, MODE5 */
-			0x0b0 0x05	/*pru1_pru_r30_4, MODE5 */
-			0x0b4 0x05	/*pru1_pru_r30_5, MODE5 */
-			0x0C8 0x0F	/*P8.36, SERVO_PWR GPIO OUT*/
-
-			/* I2C1 */
-			0x15C 0x32	/* P9.17,i2c1_scl,INPUT_PULLUP,MODE2 */
-			0x158 0x32	/* P9.18,i2c1_sda,INPUT_PULLUP,MODE2 */
-
-			/* I2C2 */
-			//0x17c  0x73 /* P9.19, i2c2_sda, mode 3 */
-			//0x178  0x73 /* P9.20, i2c2_sda, mode 3 */
-
-			/* UART5 */
-			0x0C4 0x34	/* P8.38,uart5_rxd,MODE4 */
-			0x0C0 0x14	/* P8.37,uart5_txd,MODE4 */
 
 		>;
 	};
-
-
-	led_pins: pinmux_led_pins {
-		pinctrl-single,pins = <
-			0x090 (PIN_OUTPUT | MUX_MODE7) /* (R7) gpmc_advn_ale.gpio2[2] - P8.7, LED_RED, GP1_PIN_5 */
-			0x094 (PIN_OUTPUT | MUX_MODE7) /* (T7) gpmc_oen_ren.gpio2[3] - P8.8, LED_GREEN, GP1_PIN_6 */
-			0x02C (PIN_OUTPUT | MUX_MODE7) /* (U12) gpmc_ad11.gpio0[27] - P8.17, BATT_LED_1 */
-			0x08c (PIN_OUTPUT | MUX_MODE7) /* (V12) gpio2.1 - P8.18  BATT_LED_2 diff from BLUE! */
-			0x07C (PIN_OUTPUT | MUX_MODE7) /* (V6) gpmc_csn0.gpio1[29] - P8.26, BATT_LED_3 */
-			0x028 (PIN_OUTPUT | MUX_MODE7) /* (T11) gpmc_ad10.gpio0[26] - P8.14, BATT_LED_4 */
-		>;
-	};
-
 };
 
 
@@ -318,18 +261,18 @@
 /*******************************************************************************
 * EQEP
 *******************************************************************************/
-/*&eqep0 {
+&eqep0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&P9_92_qep_pin &P9_27_qep_pin>;
-*/
-/*	count_mode = <0>;  /* 0 - Quadrature mode, normal 90 phase offset cha & chb.  1 - Direction mode.  cha input = clock, chb input = direction */
-/*	swap_inputs = <0>; /* Are channel A and channel B swapped? (0 - no, 1 - yes) */
-/*	invert_qa = <1>;   /* Should we invert the channel A input?  */
-/*	invert_qb = <1>;   /* Should we invert the channel B input? I invert these because my encoder outputs drive transistors that pull down the pins */
-/*	invert_qi = <0>;   /* Should we invert the index input? */
-/*	invert_qs = <0>;   /* Should we invert the strobe input? */
-/*	status = "okay";
-};*/
+
+	count_mode = <0>;  /* 0 - Quadrature mode, normal 90 phase offset cha & chb.  1 - Direction mode.  cha input = clock, chb input = direction */
+	swap_inputs = <0>; /* Are channel A and channel B swapped? (0 - no, 1 - yes) */
+	invert_qa = <1>;   /* Should we invert the channel A input?  */
+	invert_qb = <1>;   /* Should we invert the channel B input? I invert these because my encoder outputs drive transistors that pull down the pins */
+	invert_qi = <0>;   /* Should we invert the index input? */
+	invert_qs = <0>;   /* Should we invert the strobe input? */
+	status = "okay";
+};
 
 &eqep1 {
 	pinctrl-names = "default";
@@ -358,25 +301,6 @@
 };
 
 
-/*******************************************************************************
-* UART
-*******************************************************************************/
-&uart1 {
-	status = "okay";
-};
-
-&uart2 {
-	status = "okay";
-};
-
-&uart4 {
-	status = "okay";
-};
-
-&uart5 {
-	status = "okay";
-};
-
 
 /*******************************************************************************
 * PRU Encoder and Servos
@@ -386,106 +310,5 @@
 
 	pruss: pruss@4a300000 {
 		status = "okay";
-	};
-};
-
-
-/*******************************************************************************
-* I2C
-*******************************************************************************/
-&i2c1 {
-	status = "okay";
-	clock-frequency = <400000>;
-	#address-cells = <1>;
-	#size-cells = <0>;
-};
-
-/*******************************************************************************
-* SPI
-*******************************************************************************/
-&spi1 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-	status = "okay";
-
-	channel@0 {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		compatible = "spidev";
-		symlink = "spi/1.0";
-
-		reg = <0>;
-		spi-max-frequency = <16000000>;
-		spi-cpha;
-	};
-
-	channel@1 {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		compatible = "spidev";
-		symlink = "spi/1.1";
-
-		reg = <1>;
-		spi-max-frequency = <16000000>;
-	};
-};
-
-/*******************************************************************************
-* LEDs
-*******************************************************************************/
-/ {
-	leds {
-		pinctrl-names = "default";
-		pinctrl-0 = <&led_pins>;
-		compatible = "gpio-leds";
-
-		red_led {
-			label = "red";
-			gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-		};
-
-		green_led {
-			label = "green";
-			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-		};
-
-		batt_1_led {
-			label = "bat25";
-			gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-		};
-
-		batt_2_led {
-			label = "bat50";
-			gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-		};
-
-		batt_3_led {
-			label = "bat75";
-			gpios = <&gpio1 29 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-		};
-
-		batt_4_led {
-			label = "bat100";
-			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
-		};
-	};
-
-};
-
-&tscadc {
-	status = "okay";
-	adc {
-		ti,adc-channels = <0 1 2 3 4 5 6 7>;
-		ti,chan-step-avg = <0x16 0x16 0x16 0x16 0x16 0x16 0x16 0x16>;
-		ti,chan-step-opendelay = <0x98 0x98 0x98 0x98 0x98 0x98 0x98 0x98>;
-		ti,chan-step-sampledelay = <0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0>;
 	};
 };
